@@ -26,7 +26,7 @@
     </style>
 </head>
 
-<body class="bg-gradient-to-b from-emerald-50 to-white text-gray-800">
+<body class="bg-gradient-to-b from-emerald-50 to-white text-gray-800 py-20">
 
     <!-- Navigation -->
     @include('layouts.public-navigation')

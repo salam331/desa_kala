@@ -6,7 +6,7 @@
     <title>Layanan Publik - Desa Kala</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-100 py-20">
 
     <!-- Navigation -->
     @include('layouts.public-navigation')

@@ -14,7 +14,7 @@
         }
     </style>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-100 py-20">
 
     <!-- Navigation -->
     @include('layouts.public-navigation')
