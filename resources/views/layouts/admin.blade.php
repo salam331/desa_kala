@@ -70,7 +70,7 @@
                 </a>
 
                 <!-- Profil Desa -->
-                <a href="{{ route('admin.profil-desa.edit') }}"
+                <a href="{{ route('admin.profil-desa.index') }}"
                     class="flex items-center px-4 py-2 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.profil-desa.*') ? 'bg-indigo-600 text-white shadow-md' : 'hover:bg-gray-700 hover:text-white' }}">
                     <i class="fas fa-map-marker-alt w-5 mr-3"></i> Profil Desa
                 </a>

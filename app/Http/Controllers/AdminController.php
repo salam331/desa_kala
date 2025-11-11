@@ -421,6 +421,17 @@ class AdminController extends Controller
     }
 
     // Profil Desa Management
+    public function indexProfilDesa()
+    {
+        $profilDesa = ProfilDesa::first();
+        $logs = AdminLog::where('action', 'update_profil_desa')
+                        ->with('user')
+                        ->latest()
+                        ->paginate(10);
+
+        return view('admin.profil-desa.index', compact('profilDesa', 'logs'));
+    }
+
     public function editProfilDesa()
     {
         $profilDesa = ProfilDesa::first();
@@ -479,13 +490,13 @@ class AdminController extends Controller
             'details' => 'Updated profil desa',
         ]);
 
-        return redirect()->route('admin.profil-desa.edit')->with('status', 'Profil desa berhasil diperbarui.');
+        return redirect()->route('admin.profil-desa.index')->with('status', 'Profil desa berhasil diperbarui.');
     }
 
     // Struktur Pemerintahan Management
     public function indexStruktur()
     {
-        $struktur = StrukturPemerintahan::active()->ordered()->paginate(15);
+        $struktur = StrukturPemerintahan::ordered()->paginate(15);
         return view('admin.struktur-pemerintahan.index', compact('struktur'));
     }
 

@@ -170,8 +170,8 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="peta_embed">Embed Peta (iframe)</label>
-                                    <textarea name="peta_embed" id="peta_embed" class="form-control @error('peta_embed') is-invalid @enderror" rows="4" placeholder="Masukkan kode embed peta dari Google Maps">{{ old('peta_embed', $profilDesa->peta_embed ?? '') }}</textarea>
+                                    <label for="peta_embed">Embed Peta (iframe) atau URL Peta</label>
+                                    <textarea name="peta_embed" id="peta_embed" class="form-control @error('peta_embed') is-invalid @enderror" rows="4" placeholder="Masukkan kode embed peta dari Google Maps atau URL peta (contoh: https://maps.google.com/maps?q=-6.200000,106.816666)">{{ old('peta_embed', $profilDesa->peta_embed ?? '') }}</textarea>
                                     @error('peta_embed')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -182,7 +182,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                                <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">Kembali</a>
+                                <a href="{{ route('admin.profil-desa.index') }}" class="btn btn-secondary">Kembali</a>
                             </div>
                         </div>
                     </form>

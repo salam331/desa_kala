@@ -52,15 +52,17 @@
         <!-- Sejarah Desa -->
         <section class="bg-white rounded-2xl shadow-md p-8 hover:shadow-lg transition">
             <h2 class="text-3xl font-bold mb-4 text-emerald-700 border-b-2 border-emerald-100 pb-2">Sejarah Desa</h2>
-            <p class="text-gray-700 leading-relaxed text-justify">
-                Desa Kala berdiri sejak tahun 1950-an sebagai bagian dari upaya pembangunan nasional pasca kemerdekaan.
-                Awalnya, desa ini hanyalah pemukiman kecil di tengah hutan tropis. Berkat semangat gotong royong dan
-                kerja keras
-                warganya, Desa Kala berkembang pesat menjadi pusat kegiatan ekonomi dan sosial yang penting. Kini, desa
-                ini dikenal
-                dengan kehidupan masyarakat yang harmonis dan fokus pada pembangunan berkelanjutan berbasis potensi
-                lokal.
-            </p>
+            @if($profilDesa)
+                <p class="text-gray-700 leading-relaxed text-justify">{{ $profilDesa->sejarah_desa }}</p>
+            @else
+                <p class="text-gray-700 leading-relaxed text-justify">
+                    Desa Kala berdiri sejak tahun 1950-an sebagai bagian dari upaya pembangunan nasional pasca kemerdekaan.
+                    Awalnya, desa ini hanyalah pemukiman kecil di tengah hutan tropis. Berkat semangat gotong royong dan
+                    kerja keras warganya, Desa Kala berkembang pesat menjadi pusat kegiatan ekonomi dan sosial yang penting.
+                    Kini, desa ini dikenal dengan kehidupan masyarakat yang harmonis dan fokus pada pembangunan berkelanjutan
+                    berbasis potensi lokal.
+                </p>
+            @endif
         </section>
 
         <!-- Visi & Misi -->
@@ -69,20 +71,28 @@
             <div class="grid md:grid-cols-2 gap-8">
                 <div>
                     <h3 class="text-2xl font-semibold mb-3 text-green-600">Visi</h3>
-                    <p class="italic text-gray-700">
-                        "Menjadi Desa Maju, Mandiri, dan Berkelanjutan yang Berbasis Potensi Lokal serta
-                        Berorientasi pada Kesejahteraan Masyarakat."
-                    </p>
+                    @if($profilDesa)
+                        <p class="italic text-gray-700">{{ $profilDesa->visi }}</p>
+                    @else
+                        <p class="italic text-gray-700">
+                            "Menjadi Desa Maju, Mandiri, dan Berkelanjutan yang Berbasis Potensi Lokal serta
+                            Berorientasi pada Kesejahteraan Masyarakat."
+                        </p>
+                    @endif
                 </div>
                 <div>
                     <h3 class="text-2xl font-semibold mb-3 text-green-600">Misi</h3>
-                    <ul class="list-disc list-inside space-y-2 text-gray-700">
-                        <li>Meningkatkan kualitas sumber daya manusia melalui pendidikan dan pelatihan.</li>
-                        <li>Mengembangkan potensi ekonomi lokal berbasis pertanian dan UMKM.</li>
-                        <li>Membangun infrastruktur yang berkualitas dan berkelanjutan.</li>
-                        <li>Melestarikan budaya serta menjaga kelestarian lingkungan.</li>
-                        <li>Meningkatkan pelayanan publik yang transparan dan akuntabel.</li>
-                    </ul>
+                    @if($profilDesa)
+                        <p class="text-gray-700">{{ $profilDesa->misi }}</p>
+                    @else
+                        <ul class="list-disc list-inside space-y-2 text-gray-700">
+                            <li>Meningkatkan kualitas sumber daya manusia melalui pendidikan dan pelatihan.</li>
+                            <li>Mengembangkan potensi ekonomi lokal berbasis pertanian dan UMKM.</li>
+                            <li>Membangun infrastruktur yang berkualitas dan berkelanjutan.</li>
+                            <li>Melestarikan budaya serta menjaga kelestarian lingkungan.</li>
+                            <li>Meningkatkan pelayanan publik yang transparan dan akuntabel.</li>
+                        </ul>
+                    @endif
                 </div>
             </div>
         </section>
@@ -92,50 +102,19 @@
             <h2 class="text-3xl font-bold mb-8 text-emerald-700 border-b-2 border-emerald-100 pb-2">Struktur
                 Pemerintahan</h2>
             <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Card Pejabat -->
-                <template id="pejabat-template"></template>
-                <div class="text-center">
-                    <img src="https://via.placeholder.com/150x200?text=Kepala+Desa"
-                        class="mx-auto mb-4 w-32 h-40 object-cover rounded-lg shadow-md hover:scale-105 transition"
-                        alt="">
-                    <h3 class="font-semibold text-lg">Bapak Ahmad Santoso</h3>
-                    <p class="text-gray-600 text-sm">Kepala Desa</p>
-                </div>
-                <div class="text-center">
-                    <img src="https://via.placeholder.com/150x200?text=Sekretaris+Desa"
-                        class="mx-auto mb-4 w-32 h-40 object-cover rounded-lg shadow-md hover:scale-105 transition"
-                        alt="">
-                    <h3 class="font-semibold text-lg">Ibu Siti Aminah</h3>
-                    <p class="text-gray-600 text-sm">Sekretaris Desa</p>
-                </div>
-                <div class="text-center">
-                    <img src="https://via.placeholder.com/150x200?text=Kaur+Keuangan"
-                        class="mx-auto mb-4 w-32 h-40 object-cover rounded-lg shadow-md hover:scale-105 transition"
-                        alt="">
-                    <h3 class="font-semibold text-lg">Bapak Budi Hartono</h3>
-                    <p class="text-gray-600 text-sm">Kaur Keuangan</p>
-                </div>
-                <div class="text-center">
-                    <img src="https://via.placeholder.com/150x200?text=Kaur+Umum"
-                        class="mx-auto mb-4 w-32 h-40 object-cover rounded-lg shadow-md hover:scale-105 transition"
-                        alt="">
-                    <h3 class="font-semibold text-lg">Ibu Rina Sari</h3>
-                    <p class="text-gray-600 text-sm">Kaur Umum</p>
-                </div>
-                <div class="text-center">
-                    <img src="https://via.placeholder.com/150x200?text=Kaur+Pembangunan"
-                        class="mx-auto mb-4 w-32 h-40 object-cover rounded-lg shadow-md hover:scale-105 transition"
-                        alt="">
-                    <h3 class="font-semibold text-lg">Bapak Joko Widodo</h3>
-                    <p class="text-gray-600 text-sm">Kaur Pembangunan</p>
-                </div>
-                <div class="text-center">
-                    <img src="https://via.placeholder.com/150x200?text=Kaur+Pemberdayaan"
-                        class="mx-auto mb-4 w-32 h-40 object-cover rounded-lg shadow-md hover:scale-105 transition"
-                        alt="">
-                    <h3 class="font-semibold text-lg">Ibu Maya Dewi</h3>
-                    <p class="text-gray-600 text-sm">Kaur Pemberdayaan</p>
-                </div>
+                @forelse($strukturPemerintahan as $pejabat)
+                    <div class="text-center">
+                        <img src="{{ $pejabat->foto ? asset($pejabat->foto) : 'https://via.placeholder.com/150x200?text=' . urlencode($pejabat->jabatan) }}"
+                            class="mx-auto mb-4 w-32 h-40 object-cover rounded-lg shadow-md hover:scale-105 transition"
+                            alt="{{ $pejabat->nama }}">
+                        <h3 class="font-semibold text-lg">{{ $pejabat->nama }}</h3>
+                        <p class="text-gray-600 text-sm">{{ $pejabat->jabatan }}</p>
+                    </div>
+                @empty
+                    <div class="col-span-full text-center text-gray-500">
+                        <p>Belum ada data struktur pemerintahan.</p>
+                    </div>
+                @endforelse
             </div>
         </section>
 
@@ -147,32 +126,39 @@
                 <div>
                     <h3 class="text-2xl font-semibold mb-3 text-green-600">Peta Desa</h3>
                     <div class="overflow-hidden rounded-xl shadow-md">
-                        <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.521260322283!2d106.816666!3d-6.200000!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f5d2e764b12d%3A0x3d2cdbfd5e51e5e!2sJakarta!5e0!3m2!1sen!2sid!4v1690000000000"
-                            width="100%" height="320" style="border:0;" allowfullscreen="" loading="lazy">
-                        </iframe>
+                        @if($profilDesa && $profilDesa->peta_embed_display)
+                            {!! $profilDesa->peta_embed_display !!}
+                        @else
+                            <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.521260322283!2d106.816666!3d-6.200000!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f5d2e764b12d%3A0x3d2cdbfd5e51e5e!2sJakarta!5e0!3m2!1sen!2sid!4v1690000000000"
+                                width="100%" height="320" style="border:0;" allowfullscreen="" loading="lazy">
+                            </iframe>
+                        @endif
                     </div>
                 </div>
                 <!-- Informasi -->
                 <div>
                     <h3 class="text-2xl font-semibold mb-3 text-green-600">Informasi Wilayah</h3>
                     <div class="bg-emerald-50 rounded-xl p-5 shadow-inner space-y-3 text-gray-700">
-                        <div class="flex justify-between"><span class="font-medium">Luas Wilayah:</span><span>1.200
-                                Ha</span></div>
-                        <div class="flex justify-between"><span class="font-medium">Batas Utara:</span><span>Desa
-                                Sebelah Utara</span></div>
-                        <div class="flex justify-between"><span class="font-medium">Batas Selatan:</span><span>Sungai
-                                Kala</span></div>
-                        <div class="flex justify-between"><span class="font-medium">Batas Timur:</span><span>Desa Timur
-                                Lestari</span></div>
-                        <div class="flex justify-between"><span class="font-medium">Batas Barat:</span><span>Jalan Raya
-                                Kabupaten</span></div>
-                        <div class="flex justify-between"><span class="font-medium">Jumlah Dusun:</span><span>5
-                                Dusun</span></div>
-                        <div class="flex justify-between"><span class="font-medium">Jumlah RT:</span><span>25 RT</span>
-                        </div>
-                        <div class="flex justify-between"><span class="font-medium">Jumlah RW:</span><span>5 RW</span>
-                        </div>
+                        @if($profilDesa)
+                            <div class="flex justify-between"><span class="font-medium">Luas Wilayah:</span><span>{{ $profilDesa->data_wilayah['luas_wilayah'] ?? '-' }} Ha</span></div>
+                            <div class="flex justify-between"><span class="font-medium">Batas Utara:</span><span>{{ $profilDesa->data_wilayah['batas_utara'] ?? '-' }}</span></div>
+                            <div class="flex justify-between"><span class="font-medium">Batas Selatan:</span><span>{{ $profilDesa->data_wilayah['batas_selatan'] ?? '-' }}</span></div>
+                            <div class="flex justify-between"><span class="font-medium">Batas Timur:</span><span>{{ $profilDesa->data_wilayah['batas_timur'] ?? '-' }}</span></div>
+                            <div class="flex justify-between"><span class="font-medium">Batas Barat:</span><span>{{ $profilDesa->data_wilayah['batas_barat'] ?? '-' }}</span></div>
+                            <div class="flex justify-between"><span class="font-medium">Jumlah Dusun:</span><span>{{ $profilDesa->data_wilayah['jumlah_dusun'] ?? '-' }} Dusun</span></div>
+                            <div class="flex justify-between"><span class="font-medium">Jumlah RT:</span><span>{{ $profilDesa->data_wilayah['jumlah_rt'] ?? '-' }} RT</span></div>
+                            <div class="flex justify-between"><span class="font-medium">Jumlah RW:</span><span>{{ $profilDesa->data_wilayah['jumlah_rw'] ?? '-' }} RW</span></div>
+                        @else
+                            <div class="flex justify-between"><span class="font-medium">Luas Wilayah:</span><span>1.200 Ha</span></div>
+                            <div class="flex justify-between"><span class="font-medium">Batas Utara:</span><span>Desa Sebelah Utara</span></div>
+                            <div class="flex justify-between"><span class="font-medium">Batas Selatan:</span><span>Sungai Kala</span></div>
+                            <div class="flex justify-between"><span class="font-medium">Batas Timur:</span><span>Desa Timur Lestari</span></div>
+                            <div class="flex justify-between"><span class="font-medium">Batas Barat:</span><span>Jalan Raya Kabupaten</span></div>
+                            <div class="flex justify-between"><span class="font-medium">Jumlah Dusun:</span><span>5 Dusun</span></div>
+                            <div class="flex justify-between"><span class="font-medium">Jumlah RT:</span><span>25 RT</span></div>
+                            <div class="flex justify-between"><span class="font-medium">Jumlah RW:</span><span>5 RW</span></div>
+                        @endif
                     </div>
                 </div>
             </div>

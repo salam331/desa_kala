@@ -6,9 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [App\Http\Controllers\WelcomeController::class, 'index']);
 
-Route::get('/profil-desa', function () {
-    return view('profil-desa');
-});
+Route::get('/profil-desa', [App\Http\Controllers\ProfilDesaController::class, 'index'])->name('profil-desa');
 
 Route::get('/berita', [App\Http\Controllers\BeritaController::class, 'index'])->name('berita.index');
 Route::get('/berita/{id}', [App\Http\Controllers\BeritaController::class, 'show'])->name('berita.show');
@@ -69,6 +67,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/berita/{id}', [AdminController::class, 'beritaDestroy'])->name('berita.destroy');
 
         // Profil Desa Management
+        Route::get('/profil-desa', [AdminController::class, 'indexProfilDesa'])->name('profil-desa.index');
         Route::get('/profil-desa/edit', [AdminController::class, 'editProfilDesa'])->name('profil-desa.edit');
         Route::put('/profil-desa', [AdminController::class, 'updateProfilDesa'])->name('profil-desa.update');
 
