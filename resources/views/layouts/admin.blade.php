@@ -81,6 +81,12 @@
                     <i class="fas fa-sitemap w-5 mr-3"></i> Struktur Pemerintahan
                 </a>
 
+                <!-- Layanan Publik -->
+                <a href="{{ route('admin.layanan.index') }}"
+                    class="flex items-center px-4 py-2 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.layanan.*') ? 'bg-indigo-600 text-white shadow-md' : 'hover:bg-gray-700 hover:text-white' }}">
+                    <i class="fas fa-concierge-bell w-5 mr-3"></i> Layanan Publik
+                </a>
+
                 <!-- Log Aktivitas -->
                 <a href="{{ route('admin.logs') }}"
                     class="flex items-center px-4 py-2 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.logs') ? 'bg-indigo-600 text-white shadow-md' : 'hover:bg-gray-700 hover:text-white' }}">

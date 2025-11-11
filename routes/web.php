@@ -78,6 +78,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/struktur-pemerintahan/{id}/edit', [AdminController::class, 'editStruktur'])->name('struktur-pemerintahan.edit');
         Route::put('/struktur-pemerintahan/{id}', [AdminController::class, 'updateStruktur'])->name('struktur-pemerintahan.update');
         Route::delete('/struktur-pemerintahan/{id}', [AdminController::class, 'destroyStruktur'])->name('struktur-pemerintahan.destroy');
+
+        // Layanan Management
+        Route::get('/layanan', [AdminController::class, 'layananIndex'])->name('layanan.index');
+        Route::get('/layanan/create', [AdminController::class, 'layananCreate'])->name('layanan.create');
+        Route::post('/layanan', [AdminController::class, 'layananStore'])->name('layanan.store');
+        Route::get('/layanan/{id}/edit', [AdminController::class, 'layananEdit'])->name('layanan.edit');
+        Route::put('/layanan/{id}', [AdminController::class, 'layananUpdate'])->name('layanan.update');
+        Route::delete('/layanan/{id}', [AdminController::class, 'layananDestroy'])->name('layanan.destroy');
     });
 });
 

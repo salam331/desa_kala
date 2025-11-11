@@ -6,6 +6,7 @@ use App\Http\Requests\StoreBeritaRequest;
 use App\Http\Requests\UpdateBeritaRequest;
 use App\Models\AdminLog;
 use App\Models\Berita;
+use App\Models\Layanan;
 use App\Models\Pengaduan;
 use App\Models\ProfilDesa;
 use App\Models\StrukturPemerintahan;
@@ -25,7 +26,7 @@ class AdminController extends Controller
         // Statistik untuk dashboard
         $stats = [
             'total_berita' => Berita::count(),
-            'total_layanan' => 0, // Placeholder
+            'total_layanan' => Layanan::count(),
             'total_pengaduan' => Pengaduan::count(),
             'total_admin' => User::count(),
             'pengaduan_pending' => Pengaduan::where('status', 'pending')->count(),
@@ -588,6 +589,117 @@ class AdminController extends Controller
         ]);
 
         return redirect()->route('admin.struktur-pemerintahan.index')->with('success', 'Struktur pemerintahan berhasil dihapus.');
+    }
+
+    // Layanan Management
+    public function layananIndex()
+    {
+        $layanan = Layanan::orderBy('created_at', 'desc')->paginate(15);
+        return view('admin.layanan.index', compact('layanan'));
+    }
+
+    public function layananCreate()
+    {
+        return view('admin.layanan.create');
+    }
+
+    public function layananStore(Request $request)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'kategori' => 'required|in:administrasi,perizinan',
+            'deskripsi' => 'required|string',
+            'prosedur' => 'required|array',
+            'prosedur.*' => 'required|string',
+            'syarat' => 'required|array',
+            'syarat.*' => 'required|string',
+            'waktu_proses' => 'required|string|max:255',
+            'biaya' => 'required|string|max:255',
+            'kontak' => 'required|string|max:255',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'is_active' => 'boolean',
+        ]);
+
+        $data = $request->all();
+
+        // Handle gambar upload
+        if ($request->hasFile('gambar')) {
+            $file = $request->file('gambar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('images/layanan'), $filename);
+            $data['gambar'] = 'images/layanan/' . $filename;
+        }
+
+        Layanan::create($data);
+
+        AdminLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'create_layanan',
+            'details' => 'Created layanan: ' . $request->nama,
+        ]);
+
+        return redirect()->route('admin.layanan.index')->with('success', 'Layanan berhasil ditambahkan.');
+    }
+
+    public function layananEdit($id)
+    {
+        $layanan = Layanan::findOrFail($id);
+        return view('admin.layanan.edit', compact('layanan'));
+    }
+
+    public function layananUpdate(Request $request, $id)
+    {
+        $layanan = Layanan::findOrFail($id);
+
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'kategori' => 'required|in:administrasi,perizinan',
+            'deskripsi' => 'required|string',
+            'prosedur' => 'required|array',
+            'prosedur.*' => 'required|string',
+            'syarat' => 'required|array',
+            'syarat.*' => 'required|string',
+            'waktu_proses' => 'required|string|max:255',
+            'biaya' => 'required|string|max:255',
+            'kontak' => 'required|string|max:255',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'is_active' => 'boolean',
+        ]);
+
+        $data = $request->all();
+
+        // Handle gambar upload
+        if ($request->hasFile('gambar')) {
+            $file = $request->file('gambar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('images/layanan'), $filename);
+            $data['gambar'] = 'images/layanan/' . $filename;
+        }
+
+        $layanan->update($data);
+
+        AdminLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'update_layanan',
+            'details' => 'Updated layanan: ' . $request->nama,
+        ]);
+
+        return redirect()->route('admin.layanan.index')->with('success', 'Layanan berhasil diperbarui.');
+    }
+
+    public function layananDestroy($id)
+    {
+        $layanan = Layanan::findOrFail($id);
+
+        $layanan->delete();
+
+        AdminLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'delete_layanan',
+            'details' => 'Deleted layanan: ' . $layanan->nama,
+        ]);
+
+        return redirect()->route('admin.layanan.index')->with('success', 'Layanan berhasil dihapus.');
     }
 
     /**
