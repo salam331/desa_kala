@@ -7,6 +7,8 @@ use App\Http\Requests\UpdateBeritaRequest;
 use App\Models\AdminLog;
 use App\Models\Berita;
 use App\Models\Pengaduan;
+use App\Models\ProfilDesa;
+use App\Models\StrukturPemerintahan;
 use App\Models\User;
 use App\Models\WelcomeContent;
 use App\Models\WelcomeElement;
@@ -416,6 +418,165 @@ class AdminController extends Controller
         ]);
 
         return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil dihapus.');
+    }
+
+    // Profil Desa Management
+    public function editProfilDesa()
+    {
+        $profilDesa = ProfilDesa::first();
+        return view('admin.profil-desa.edit', compact('profilDesa'));
+    }
+
+    public function updateProfilDesa(Request $request)
+    {
+        $request->validate([
+            'sejarah_desa' => 'required|string',
+            'visi' => 'required|string',
+            'misi' => 'required|string',
+            'luas_wilayah' => 'required|string',
+            'batas_utara' => 'required|string',
+            'batas_selatan' => 'required|string',
+            'batas_timur' => 'required|string',
+            'batas_barat' => 'required|string',
+            'jumlah_dusun' => 'required|integer',
+            'jumlah_rt' => 'required|integer',
+            'jumlah_rw' => 'required|integer',
+            'peta_embed' => 'nullable|string',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
+        ]);
+
+        $dataWilayah = [
+            'luas_wilayah' => $request->luas_wilayah,
+            'batas_utara' => $request->batas_utara,
+            'batas_selatan' => $request->batas_selatan,
+            'batas_timur' => $request->batas_timur,
+            'batas_barat' => $request->batas_barat,
+            'jumlah_dusun' => $request->jumlah_dusun,
+            'jumlah_rt' => $request->jumlah_rt,
+            'jumlah_rw' => $request->jumlah_rw,
+        ];
+
+        $profilDesa = ProfilDesa::first();
+        if (!$profilDesa) {
+            $profilDesa = new ProfilDesa();
+        }
+
+        $profilDesa->fill([
+            'sejarah_desa' => $request->sejarah_desa,
+            'visi' => $request->visi,
+            'misi' => $request->misi,
+            'data_wilayah' => $dataWilayah,
+            'peta_embed' => $request->peta_embed,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+        ]);
+        $profilDesa->save();
+
+        AdminLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'update_profil_desa',
+            'details' => 'Updated profil desa',
+        ]);
+
+        return redirect()->route('admin.profil-desa.edit')->with('status', 'Profil desa berhasil diperbarui.');
+    }
+
+    // Struktur Pemerintahan Management
+    public function indexStruktur()
+    {
+        $struktur = StrukturPemerintahan::active()->ordered()->paginate(15);
+        return view('admin.struktur-pemerintahan.index', compact('struktur'));
+    }
+
+    public function createStruktur()
+    {
+        return view('admin.struktur-pemerintahan.create');
+    }
+
+    public function storeStruktur(Request $request)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'jabatan' => 'required|string|max:255',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'urutan' => 'required|integer|min:0',
+            'is_active' => 'boolean',
+        ]);
+
+        $data = $request->all();
+
+        // Handle foto upload
+        if ($request->hasFile('foto')) {
+            $file = $request->file('foto');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('images/struktur'), $filename);
+            $data['foto'] = 'images/struktur/' . $filename;
+        }
+
+        StrukturPemerintahan::create($data);
+
+        AdminLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'create_struktur_pemerintahan',
+            'details' => 'Created struktur pemerintahan: ' . $request->nama,
+        ]);
+
+        return redirect()->route('admin.struktur-pemerintahan.index')->with('success', 'Struktur pemerintahan berhasil ditambahkan.');
+    }
+
+    public function editStruktur($id)
+    {
+        $struktur = StrukturPemerintahan::findOrFail($id);
+        return view('admin.struktur-pemerintahan.edit', compact('struktur'));
+    }
+
+    public function updateStruktur(Request $request, $id)
+    {
+        $struktur = StrukturPemerintahan::findOrFail($id);
+
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'jabatan' => 'required|string|max:255',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'urutan' => 'required|integer|min:0',
+            'is_active' => 'boolean',
+        ]);
+
+        $data = $request->all();
+
+        // Handle foto upload
+        if ($request->hasFile('foto')) {
+            $file = $request->file('foto');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('images/struktur'), $filename);
+            $data['foto'] = 'images/struktur/' . $filename;
+        }
+
+        $struktur->update($data);
+
+        AdminLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'update_struktur_pemerintahan',
+            'details' => 'Updated struktur pemerintahan: ' . $request->nama,
+        ]);
+
+        return redirect()->route('admin.struktur-pemerintahan.index')->with('success', 'Struktur pemerintahan berhasil diperbarui.');
+    }
+
+    public function destroyStruktur($id)
+    {
+        $struktur = StrukturPemerintahan::findOrFail($id);
+
+        $struktur->delete();
+
+        AdminLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'delete_struktur_pemerintahan',
+            'details' => 'Deleted struktur pemerintahan: ' . $struktur->nama,
+        ]);
+
+        return redirect()->route('admin.struktur-pemerintahan.index')->with('success', 'Struktur pemerintahan berhasil dihapus.');
     }
 
     /**

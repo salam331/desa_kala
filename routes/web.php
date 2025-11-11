@@ -22,9 +22,7 @@ Route::get('/galeri-desa', [App\Http\Controllers\GaleriController::class, 'index
 Route::get('/kontak-pengaduan', [App\Http\Controllers\KontakController::class, 'index'])->name('kontak.index');
 Route::post('/kontak-pengaduan', [App\Http\Controllers\KontakController::class, 'store'])->name('kontak.store');
 
-Route::get('/admin/dashboard', function () {
-    return view('admin.dashboard');
-})->middleware(['auth', 'verified'])->name('admin.dashboard');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -69,7 +67,19 @@ Route::middleware('auth')->group(function () {
         Route::get('/berita/{id}/edit', [AdminController::class, 'beritaEdit'])->name('berita.edit');
         Route::put('/berita/{id}', [AdminController::class, 'beritaUpdate'])->name('berita.update');
         Route::delete('/berita/{id}', [AdminController::class, 'beritaDestroy'])->name('berita.destroy');
+
+        // Profil Desa Management
+        Route::get('/profil-desa/edit', [AdminController::class, 'editProfilDesa'])->name('profil-desa.edit');
+        Route::put('/profil-desa', [AdminController::class, 'updateProfilDesa'])->name('profil-desa.update');
+
+        // Struktur Pemerintahan Management
+        Route::get('/struktur-pemerintahan', [AdminController::class, 'indexStruktur'])->name('struktur-pemerintahan.index');
+        Route::get('/struktur-pemerintahan/create', [AdminController::class, 'createStruktur'])->name('struktur-pemerintahan.create');
+        Route::post('/struktur-pemerintahan', [AdminController::class, 'storeStruktur'])->name('struktur-pemerintahan.store');
+        Route::get('/struktur-pemerintahan/{id}/edit', [AdminController::class, 'editStruktur'])->name('struktur-pemerintahan.edit');
+        Route::put('/struktur-pemerintahan/{id}', [AdminController::class, 'updateStruktur'])->name('struktur-pemerintahan.update');
+        Route::delete('/struktur-pemerintahan/{id}', [AdminController::class, 'destroyStruktur'])->name('struktur-pemerintahan.destroy');
     });
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

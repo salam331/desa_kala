@@ -1,6 +1,11 @@
-<x-admin-layout>
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
+@extends('layouts.admin')
+
+@section('title', 'Kelola Konten Halaman Welcome')
+
+@section('content')
+<div class="py-12">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center mb-6">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 {{ __('Kelola Konten Halaman Welcome') }}
             </h2>
@@ -12,10 +17,6 @@
                 Tambah Konten Baru
             </a>
         </div>
-    </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <!-- Info Panel -->
             <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
                 <div class="flex items-start">
@@ -199,4 +200,4 @@
             </div>
         </div>
     </div>
-</x-admin-layout>
+@endsection
