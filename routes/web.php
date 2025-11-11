@@ -86,6 +86,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/layanan/{id}/edit', [AdminController::class, 'layananEdit'])->name('layanan.edit');
         Route::put('/layanan/{id}', [AdminController::class, 'layananUpdate'])->name('layanan.update');
         Route::delete('/layanan/{id}', [AdminController::class, 'layananDestroy'])->name('layanan.destroy');
+
+        // Potensi Management
+        Route::get('/potensi', [AdminController::class, 'potensiIndex'])->name('potensi.index');
+        Route::get('/potensi/create', [AdminController::class, 'potensiCreate'])->name('potensi.create');
+        Route::post('/potensi', [AdminController::class, 'potensiStore'])->name('potensi.store');
+        Route::get('/potensi/{id}/edit', [AdminController::class, 'potensiEdit'])->name('potensi.edit');
+        Route::put('/potensi/{id}', [AdminController::class, 'potensiUpdate'])->name('potensi.update');
+        Route::delete('/potensi/{id}', [AdminController::class, 'potensiDestroy'])->name('potensi.destroy');
     });
 });
 

@@ -8,6 +8,7 @@ use App\Models\AdminLog;
 use App\Models\Berita;
 use App\Models\Layanan;
 use App\Models\Pengaduan;
+use App\Models\Potensi;
 use App\Models\ProfilDesa;
 use App\Models\StrukturPemerintahan;
 use App\Models\User;
@@ -27,6 +28,7 @@ class AdminController extends Controller
         $stats = [
             'total_berita' => Berita::count(),
             'total_layanan' => Layanan::count(),
+            'total_potensi' => Potensi::count(),
             'total_pengaduan' => Pengaduan::count(),
             'total_admin' => User::count(),
             'pengaduan_pending' => Pengaduan::where('status', 'pending')->count(),
@@ -700,6 +702,111 @@ class AdminController extends Controller
         ]);
 
         return redirect()->route('admin.layanan.index')->with('success', 'Layanan berhasil dihapus.');
+    }
+
+    // Potensi Management
+    public function potensiIndex()
+    {
+        $potensi = Potensi::orderBy('created_at', 'desc')->paginate(15);
+        return view('admin.potensi.index', compact('potensi'));
+    }
+
+    public function potensiCreate()
+    {
+        return view('admin.potensi.create');
+    }
+
+    public function potensiStore(Request $request)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'kategori' => 'required|string|max:255',
+            'deskripsi' => 'required|string',
+            'detail' => 'nullable|string',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'kontak' => 'nullable|string|max:255',
+            'telepon' => 'nullable|string|max:255',
+            'lokasi' => 'nullable|string|max:255',
+            'is_active' => 'boolean',
+        ]);
+
+        $data = $request->all();
+
+        // Handle gambar upload
+        if ($request->hasFile('gambar')) {
+            $file = $request->file('gambar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('images/potensi'), $filename);
+            $data['gambar'] = 'images/potensi/' . $filename;
+        }
+
+        Potensi::create($data);
+
+        AdminLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'create_potensi',
+            'details' => 'Created potensi: ' . $request->nama,
+        ]);
+
+        return redirect()->route('admin.potensi.index')->with('success', 'Potensi berhasil ditambahkan.');
+    }
+
+    public function potensiEdit($id)
+    {
+        $potensi = Potensi::findOrFail($id);
+        return view('admin.potensi.edit', compact('potensi'));
+    }
+
+    public function potensiUpdate(Request $request, $id)
+    {
+        $potensi = Potensi::findOrFail($id);
+
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'kategori' => 'required|string|max:255',
+            'deskripsi' => 'required|string',
+            'detail' => 'nullable|string',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'kontak' => 'nullable|string|max:255',
+            'telepon' => 'nullable|string|max:255',
+            'lokasi' => 'nullable|string|max:255',
+            'is_active' => 'boolean',
+        ]);
+
+        $data = $request->all();
+
+        // Handle gambar upload
+        if ($request->hasFile('gambar')) {
+            $file = $request->file('gambar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('images/potensi'), $filename);
+            $data['gambar'] = 'images/potensi/' . $filename;
+        }
+
+        $potensi->update($data);
+
+        AdminLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'update_potensi',
+            'details' => 'Updated potensi: ' . $request->nama,
+        ]);
+
+        return redirect()->route('admin.potensi.index')->with('success', 'Potensi berhasil diperbarui.');
+    }
+
+    public function potensiDestroy($id)
+    {
+        $potensi = Potensi::findOrFail($id);
+
+        $potensi->delete();
+
+        AdminLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'delete_potensi',
+            'details' => 'Deleted potensi: ' . $potensi->nama,
+        ]);
+
+        return redirect()->route('admin.potensi.index')->with('success', 'Potensi berhasil dihapus.');
     }
 
     /**

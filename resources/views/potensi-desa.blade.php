@@ -30,25 +30,37 @@
                    class="px-4 py-2 rounded-lg bg-green-600 text-white transition-colors">
                     Semua Potensi
                 </a>
-                <a href="{{ route('potensi.index') }}?kategori=pertanian"
+                <a href="{{ route('potensi.index') }}?kategori=Pertanian"
                    class="px-4 py-2 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors">
                     Pertanian
                 </a>
-                <a href="{{ route('potensi.index') }}?kategori=peternakan"
-                   class="px-4 py-2 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors">
-                    Peternakan
-                </a>
-                <a href="{{ route('potensi.index') }}?kategori=umkm"
-                   class="px-4 py-2 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors">
-                    UMKM
-                </a>
-                <a href="{{ route('potensi.index') }}?kategori=wisata"
+                <a href="{{ route('potensi.index') }}?kategori=Wisata"
                    class="px-4 py-2 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors">
                     Wisata
                 </a>
-                <a href="{{ route('potensi.index') }}?kategori=sumber_daya_alam"
+                <a href="{{ route('potensi.index') }}?kategori=UMKM"
                    class="px-4 py-2 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors">
-                    SDA
+                    UMKM
+                </a>
+                <a href="{{ route('potensi.index') }}?kategori=Budaya"
+                   class="px-4 py-2 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors">
+                    Budaya
+                </a>
+                <a href="{{ route('potensi.index') }}?kategori=Pendidikan"
+                   class="px-4 py-2 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors">
+                    Pendidikan
+                </a>
+                <a href="{{ route('potensi.index') }}?kategori=Kesehatan"
+                   class="px-4 py-2 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors">
+                    Kesehatan
+                </a>
+                <a href="{{ route('potensi.index') }}?kategori=Infrastruktur"
+                   class="px-4 py-2 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors">
+                    Infrastruktur
+                </a>
+                <a href="{{ route('potensi.index') }}?kategori=Lainnya"
+                   class="px-4 py-2 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors">
+                    Lainnya
                 </a>
             </div>
         </div>

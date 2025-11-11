@@ -1,30 +1,42 @@
-# TODO: Update Admin Page for Profil Desa Management
+# TODO: Implementasi CRUD untuk Potensi Desa
 
-## 1. Create Model and Migration for ProfilDesa
-- Create migration for profil_desa table with fields: sejarah_desa, visi, misi, data_wilayah (json), peta_embed, created_at, updated_at
-- Create ProfilDesa model with fillable fields and casts
+## Status: Dalam Proses
 
-## 2. Create Model and Migration for StrukturPemerintahan
-- Create migration for struktur_pemerintahan table with fields: nama, jabatan, foto, urutan, is_active, created_at, updated_at
-- Create StrukturPemerintahan model with fillable fields and casts
+### Langkah-langkah yang perlu dilakukan:
 
-## 3. Update AdminController
-- Add methods: editProfilDesa, updateProfilDesa
-- Add CRUD methods for StrukturPemerintahan: indexStruktur, createStruktur, storeStruktur, editStruktur, updateStruktur, destroyStruktur
+1. **Buat migration untuk tabel potensis**
+   - File: `database/migrations/create_potensis_table.php`
+   - Fields: nama, kategori, deskripsi, detail, gambar, kontak, telepon, lokasi, is_active
 
-## 4. Add Routes
-- Add routes for profil-desa edit and struktur-pemerintahan CRUD in web.php
+2. **Buat model Potensi**
+   - File: `app/Models/Potensi.php`
+   - Fillable fields, casts, dan scopes
 
-## 5. Create Views
-- Create resources/views/admin/profil-desa/edit.blade.php
-- Create resources/views/admin/struktur-pemerintahan/index.blade.php, create.blade.php, edit.blade.php
+3. **Buat seeder untuk data awal**
+   - File: `database/seeders/PotensiSeeder.php`
+   - Populate data dari dummy data yang ada
 
-## 6. Update Profil Desa Public Page
-- Modify resources/views/profil-desa.blade.php to fetch data from database instead of static content
-- Add support for map with coordinates
+4. **Update PotensiController**
+   - File: `app/Http/Controllers/PotensiController.php`
+   - Ganti dari dummy data ke database
 
-## 7. Update Admin Dashboard
-- Add quick actions for managing profil desa and struktur pemerintahan
+5. **Tambahkan routes admin untuk potensi**
+   - File: `routes/web.php`
+   - Routes CRUD untuk admin potensi
 
-## 8. Seed Initial Data
-- Create seeders for ProfilDesa and StrukturPemerintahan with sample data
+6. **Tambahkan methods CRUD di AdminController**
+   - File: `app/Http/Controllers/AdminController.php`
+   - Methods: potensiIndex, potensiCreate, potensiStore, potensiEdit, potensiUpdate, potensiDestroy
+
+7. **Buat views admin untuk potensi**
+   - File: `resources/views/admin/potensi/index.blade.php`
+   - File: `resources/views/admin/potensi/create.blade.php`
+   - File: `resources/views/admin/potensi/edit.blade.php`
+
+8. **Buat request classes untuk validasi**
+   - File: `app/Http/Requests/StorePotensiRequest.php`
+   - File: `app/Http/Requests/UpdatePotensiRequest.php`
+
+### Langkah selanjutnya:
+- Jalankan migration dan seeder
+- Test fungsionalitas CRUD

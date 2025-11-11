@@ -87,6 +87,12 @@
                     <i class="fas fa-concierge-bell w-5 mr-3"></i> Layanan Publik
                 </a>
 
+                <!-- Potensi Desa -->
+                <a href="{{ route('admin.potensi.index') }}"
+                    class="flex items-center px-4 py-2 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.potensi.*') ? 'bg-indigo-600 text-white shadow-md' : 'hover:bg-gray-700 hover:text-white' }}">
+                    <i class="fas fa-star w-5 mr-3"></i> Potensi Desa
+                </a>
+
                 <!-- Log Aktivitas -->
                 <a href="{{ route('admin.logs') }}"
                     class="flex items-center px-4 py-2 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.logs') ? 'bg-indigo-600 text-white shadow-md' : 'hover:bg-gray-700 hover:text-white' }}">
