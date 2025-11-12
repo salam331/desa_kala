@@ -94,6 +94,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/potensi/{id}/edit', [AdminController::class, 'potensiEdit'])->name('potensi.edit');
         Route::put('/potensi/{id}', [AdminController::class, 'potensiUpdate'])->name('potensi.update');
         Route::delete('/potensi/{id}', [AdminController::class, 'potensiDestroy'])->name('potensi.destroy');
+
+        // Galeri Management
+        Route::get('/galeri', [AdminController::class, 'galeriIndex'])->name('galeri.index');
+        Route::get('/galeri/create', [AdminController::class, 'galeriCreate'])->name('galeri.create');
+        Route::post('/galeri', [AdminController::class, 'galeriStore'])->name('galeri.store');
+        Route::get('/galeri/{id}/edit', [AdminController::class, 'galeriEdit'])->name('galeri.edit');
+        Route::put('/galeri/{id}', [AdminController::class, 'galeriUpdate'])->name('galeri.update');
+        Route::delete('/galeri/{id}', [AdminController::class, 'galeriDestroy'])->name('galeri.destroy');
     });
 });
 

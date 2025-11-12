@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
             BeritaSeeder::class,
             LayananSeeder::class,
             PotensiSeeder::class,
+            GaleriSeeder::class,
         ]);
     }
 }

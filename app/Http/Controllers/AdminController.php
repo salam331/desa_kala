@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreBeritaRequest;
+use App\Http\Requests\StoreGaleriRequest;
 use App\Http\Requests\UpdateBeritaRequest;
+use App\Http\Requests\UpdateGaleriRequest;
 use App\Models\AdminLog;
 use App\Models\Berita;
+use App\Models\Galeri;
 use App\Models\Layanan;
 use App\Models\Pengaduan;
 use App\Models\Potensi;
@@ -29,6 +32,7 @@ class AdminController extends Controller
             'total_berita' => Berita::count(),
             'total_layanan' => Layanan::count(),
             'total_potensi' => Potensi::count(),
+            'total_galeri' => Galeri::count(),
             'total_pengaduan' => Pengaduan::count(),
             'total_admin' => User::count(),
             'pengaduan_pending' => Pengaduan::where('status', 'pending')->count(),
@@ -809,6 +813,99 @@ class AdminController extends Controller
         return redirect()->route('admin.potensi.index')->with('success', 'Potensi berhasil dihapus.');
     }
 
+    // Galeri Management
+    public function galeriIndex()
+    {
+        $galeri = Galeri::orderBy('created_at', 'desc')->paginate(15);
+        return view('admin.galeri.index', compact('galeri'));
+    }
+
+    public function galeriCreate()
+    {
+        $kategoris = [
+            'kegiatan' => 'Kegiatan Desa',
+            'pembangunan' => 'Pembangunan Infrastruktur',
+            'event' => 'Event dan Festival',
+            'panorama' => 'Panorama Desa',
+        ];
+        return view('admin.galeri.create', compact('kategoris'));
+    }
+
+    public function galeriStore(StoreGaleriRequest $request)
+    {
+        $data = $request->validated();
+
+        // Handle gambar upload
+        if ($request->hasFile('gambar')) {
+            $file = $request->file('gambar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('images/galeri'), $filename);
+            $data['gambar'] = 'images/galeri/' . $filename;
+        }
+
+        Galeri::create($data);
+
+        AdminLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'create_galeri',
+            'details' => 'Created galeri: ' . $request->judul,
+        ]);
+
+        return redirect()->route('admin.galeri.index')->with('success', 'Galeri berhasil ditambahkan.');
+    }
+
+    public function galeriEdit($id)
+    {
+        $galeri = Galeri::findOrFail($id);
+        $kategoris = [
+            'kegiatan' => 'Kegiatan Desa',
+            'pembangunan' => 'Pembangunan Infrastruktur',
+            'event' => 'Event dan Festival',
+            'panorama' => 'Panorama Desa',
+        ];
+        return view('admin.galeri.edit', compact('galeri', 'kategoris'));
+    }
+
+    public function galeriUpdate(UpdateGaleriRequest $request, $id)
+    {
+        $galeri = Galeri::findOrFail($id);
+
+        $data = $request->validated();
+
+        // Handle gambar upload
+        if ($request->hasFile('gambar')) {
+            $file = $request->file('gambar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('images/galeri'), $filename);
+            $data['gambar'] = 'images/galeri/' . $filename;
+        }
+
+        $galeri->update($data);
+
+        AdminLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'update_galeri',
+            'details' => 'Updated galeri: ' . $request->judul,
+        ]);
+
+        return redirect()->route('admin.galeri.index')->with('success', 'Galeri berhasil diperbarui.');
+    }
+
+    public function galeriDestroy($id)
+    {
+        $galeri = Galeri::findOrFail($id);
+
+        $galeri->delete();
+
+        AdminLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'delete_galeri',
+            'details' => 'Deleted galeri: ' . $galeri->judul,
+        ]);
+
+        return redirect()->route('admin.galeri.index')->with('success', 'Galeri berhasil dihapus.');
+    }
+
     /**
      * Attempt to download a remote image URL and save it to public/images/berita.
      * Returns the local relative path on success (e.g. 'images/berita/xxx.jpg') or null on failure.
@@ -892,51 +989,29 @@ class AdminController extends Controller
 
         // Download the file
         try {
-            // First try simple file_get_contents
-            $imageData = @file_get_contents($downloadUrl);
-            if ($imageData === false) {
-                Log::info('downloadRemoteImage: initial file_get_contents failed, trying with stream context', ['download_url' => $downloadUrl]);
-                // Fallback: try with a browser-like User-Agent and timeout
-                $context = stream_context_create([
-                    'http' => [
-                        'method' => 'GET',
-                        'header' => "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\r\n",
-                        'timeout' => 15,
-                        'follow_location' => 1,
-                    ],
-                    'ssl' => [
-                        'verify_peer' => false,
-                        'verify_peer_name' => false,
-                    ],
-                ]);
-                $imageData = @file_get_contents($downloadUrl, false, $context);
-                if ($imageData === false) {
-                    Log::error('downloadRemoteImage: failed to download image', ['download_url' => $downloadUrl]);
-                    return null;
-                }
-            }
-
-            $dir = public_path('images/berita');
-            if (!is_dir($dir)) {
-                if (!@mkdir($dir, 0755, true) && !is_dir($dir)) {
-                    Log::error('downloadRemoteImage: failed to create directory', ['dir' => $dir]);
-                    return null;
-                }
-            }
-
-            $filename = time() . '_' . bin2hex(random_bytes(6)) . '.' . $ext;
-            $path = $dir . DIRECTORY_SEPARATOR . $filename;
-            $written = @file_put_contents($path, $imageData);
-            if ($written === false) {
-                Log::error('downloadRemoteImage: failed to write file', ['path' => $path]);
+            $content = file_get_contents($downloadUrl);
+            if ($content === false) {
                 return null;
             }
 
-            Log::info('downloadRemoteImage: saved', ['path' => $path, 'relative' => 'images/berita/' . $filename]);
+            // Ensure directory exists
+            $dir = public_path('images/berita');
+            if (!is_dir($dir)) {
+                mkdir($dir, 0755, true);
+            }
 
-            // return relative path to public
+            // Generate filename
+            $filename = time() . '_' . uniqid() . '.' . $ext;
+            $filepath = $dir . '/' . $filename;
+
+            // Save file
+            if (file_put_contents($filepath, $content) === false) {
+                return null;
+            }
+
             return 'images/berita/' . $filename;
-        } catch (\Throwable $e) {
+        } catch (\Exception $e) {
+            Log::error('downloadRemoteImage: download failed', ['url' => $downloadUrl, 'error' => $e->getMessage()]);
             return null;
         }
     }
