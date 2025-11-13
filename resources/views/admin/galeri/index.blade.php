@@ -37,12 +37,23 @@
                                 @forelse($galeri as $item)
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            @if($item->gambar)
-                                                <img src="{{ asset($item->gambar) }}" alt="{{ $item->judul }}" class="h-16 w-16 object-cover rounded">
-                                            @else
-                                                <div class="h-16 w-16 bg-gray-200 rounded flex items-center justify-center">
-                                                    <span class="text-gray-500 text-xs">No Image</span>
+                                            @if($item->is_parent)
+                                                <div class="flex flex-wrap gap-1">
+                                                    @foreach($item->children->take(3) as $child)
+                                                        <img src="{{ asset($child->gambar) }}" alt="{{ $child->judul }}" class="h-12 w-12 object-cover rounded">
+                                                    @endforeach
+                                                    @if($item->children->count() > 3)
+                                                        <span class="text-xs text-gray-500">+{{ $item->children->count() - 3 }} more</span>
+                                                    @endif
                                                 </div>
+                                            @else
+                                                @if($item->gambar)
+                                                    <img src="{{ asset($item->gambar) }}" alt="{{ $item->judul }}" class="h-16 w-16 object-cover rounded">
+                                                @else
+                                                    <div class="h-16 w-16 bg-gray-200 rounded flex items-center justify-center">
+                                                        <span class="text-gray-500 text-xs">No Image</span>
+                                                    </div>
+                                                @endif
                                             @endif
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">

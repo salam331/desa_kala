@@ -16,6 +16,7 @@ Route::get('/layanan-publik', [App\Http\Controllers\LayananController::class, 'i
 Route::get('/potensi-desa', [App\Http\Controllers\PotensiController::class, 'index'])->name('potensi.index');
 
 Route::get('/galeri-desa', [App\Http\Controllers\GaleriController::class, 'index'])->name('galeri.index');
+Route::get('/galeri-desa/{id}', [App\Http\Controllers\GaleriController::class, 'show'])->name('galeri.show');
 
 Route::get('/kontak-pengaduan', [App\Http\Controllers\KontakController::class, 'index'])->name('kontak.index');
 Route::post('/kontak-pengaduan', [App\Http\Controllers\KontakController::class, 'store'])->name('kontak.store');

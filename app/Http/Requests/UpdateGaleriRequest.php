@@ -24,7 +24,8 @@ class UpdateGaleriRequest extends FormRequest
         return [
             'judul' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'gambar' => 'nullable|array',
+            'gambar.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'kategori' => 'required|in:kegiatan,pembangunan,event,panorama',
             'album' => 'required|string|max:255',
             'tanggal' => 'required|date',

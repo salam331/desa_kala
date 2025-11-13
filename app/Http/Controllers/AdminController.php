@@ -816,7 +816,7 @@ class AdminController extends Controller
     // Galeri Management
     public function galeriIndex()
     {
-        $galeri = Galeri::orderBy('created_at', 'desc')->paginate(15);
+        $galeri = Galeri::parents()->with('children')->orderBy('created_at', 'desc')->paginate(15);
         return view('admin.galeri.index', compact('galeri'));
     }
 
@@ -835,15 +835,44 @@ class AdminController extends Controller
     {
         $data = $request->validated();
 
-        // Handle gambar upload
-        if ($request->hasFile('gambar')) {
-            $file = $request->file('gambar');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('images/galeri'), $filename);
-            $data['gambar'] = 'images/galeri/' . $filename;
-        }
+        // Set default values
+        $data['is_active'] = $request->has('is_active') ? 1 : 0;
 
-        Galeri::create($data);
+        // Create parent galeri record
+        $parentGaleri = Galeri::create([
+            'judul' => $data['judul'],
+            'deskripsi' => $data['deskripsi'],
+            'kategori' => $data['kategori'],
+            'album' => $data['album'],
+            'tanggal' => $data['tanggal'],
+            'is_active' => $data['is_active'],
+            'is_parent' => true,
+            'gambar' => null, // Parent doesn't have its own image
+        ]);
+
+        // Handle multiple gambar uploads
+        if ($request->hasFile('gambar')) {
+            $files = $request->file('gambar');
+            foreach ($files as $file) {
+                if ($file && $file->isValid()) {
+                    $filename = time() . '_' . uniqid() . '_' . $file->getClientOriginalName();
+                    $file->move(public_path('images/galeri'), $filename);
+
+                    // Create child record for each image
+                    Galeri::create([
+                        'judul' => $data['judul'], // Same title for all images in the set
+                        'deskripsi' => $data['deskripsi'], // Same description
+                        'gambar' => 'images/galeri/' . $filename,
+                        'kategori' => $data['kategori'],
+                        'album' => $data['album'],
+                        'tanggal' => $data['tanggal'],
+                        'is_active' => $data['is_active'],
+                        'parent_id' => $parentGaleri->id,
+                        'is_parent' => false,
+                    ]);
+                }
+            }
+        }
 
         AdminLog::create([
             'user_id' => Auth::id(),
@@ -872,15 +901,64 @@ class AdminController extends Controller
 
         $data = $request->validated();
 
-        // Handle gambar upload
-        if ($request->hasFile('gambar')) {
-            $file = $request->file('gambar');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('images/galeri'), $filename);
-            $data['gambar'] = 'images/galeri/' . $filename;
+        // Update parent galeri basic fields
+        $galeri->update([
+            'judul' => $data['judul'] ?? $galeri->judul,
+            'deskripsi' => $data['deskripsi'] ?? $galeri->deskripsi,
+            'kategori' => $data['kategori'] ?? $galeri->kategori,
+            'album' => $data['album'] ?? $galeri->album,
+            'tanggal' => $data['tanggal'] ?? $galeri->tanggal,
+            'is_active' => $request->has('is_active') ? 1 : 0,
+        ]);
+
+        // Update descriptions for existing child images
+        if ($request->filled('image_descriptions') && is_array($request->image_descriptions)) {
+            foreach ($request->image_descriptions as $childId => $desc) {
+                $child = Galeri::where('parent_id', $galeri->id)->where('id', $childId)->first();
+                if ($child) {
+                    $child->deskripsi = $desc;
+                    $child->save();
+                }
+            }
         }
 
-        $galeri->update($data);
+        // Handle deletion of selected child images
+        if ($request->filled('delete_images') && is_array($request->delete_images)) {
+            foreach ($request->delete_images as $childId) {
+                $child = Galeri::where('parent_id', $galeri->id)->where('id', $childId)->first();
+                if ($child) {
+                    // remove file if exists
+                    $path = public_path($child->gambar);
+                    if ($child->gambar && file_exists($path)) {
+                        @unlink($path);
+                    }
+                    $child->delete();
+                }
+            }
+        }
+
+        // Handle multiple new gambar uploads
+        if ($request->hasFile('gambar')) {
+            $files = $request->file('gambar');
+            foreach ($files as $file) {
+                if ($file && $file->isValid()) {
+                    $filename = time() . '_' . uniqid() . '_' . $file->getClientOriginalName();
+                    $file->move(public_path('images/galeri'), $filename);
+
+                    Galeri::create([
+                        'judul' => $galeri->judul,
+                        'deskripsi' => $galeri->deskripsi, // auto-fill with parent description
+                        'gambar' => 'images/galeri/' . $filename,
+                        'kategori' => $galeri->kategori,
+                        'album' => $galeri->album,
+                        'tanggal' => $galeri->tanggal,
+                        'is_active' => $galeri->is_active,
+                        'parent_id' => $galeri->id,
+                        'is_parent' => false,
+                    ]);
+                }
+            }
+        }
 
         AdminLog::create([
             'user_id' => Auth::id(),

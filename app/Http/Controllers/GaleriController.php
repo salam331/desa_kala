@@ -10,69 +10,64 @@ class GaleriController extends Controller
     public function index(Request $request)
     {
         // Ambil kategori dari query parameter
-        $kategoriFilter = $request->get('kategori', 'semua');
+        $kategori = $request->get('kategori', 'semua');
 
-        // Query galeri berdasarkan kategori dan aktif
-        $query = Galeri::active()->latestDate();
-
-        if ($kategoriFilter !== 'semua') {
-            $query->where('kategori', $kategoriFilter);
+        // Ambil parent galerii beserta anaknya (child images)
+        $query = Galeri::parents()->with('children')->active()->latestDate();
+        if ($kategori !== 'semua') {
+            $query->where('kategori', $kategori);
         }
 
-        $galeriItems = $query->get();
+        $parents = $query->get();
 
-        // Kelompokkan berdasarkan album
         $galeri = [];
-        $albumDescriptions = [
-            'kegiatan' => 'Dokumentasi berbagai kegiatan yang dilaksanakan di Desa Kala',
-            'pembangunan' => 'Dokumentasi pembangunan infrastruktur desa',
-            'event' => 'Dokumentasi event dan festival yang diadakan di desa',
-            'panorama' => 'Keindahan panorama dan pemandangan Desa Kala'
-        ];
+        foreach ($parents as $parent) {
+            $group = [
+                'id' => $parent->id,
+                'judul' => $parent->judul,
+                'deskripsi' => $parent->deskripsi,
+                'kategori' => $parent->kategori,
+                'foto' => [],
+            ];
 
-        $albumNames = [
-            'kegiatan' => 'Kegiatan Desa',
-            'pembangunan' => 'Pembangunan Infrastruktur',
-            'event' => 'Event dan Festival',
-            'panorama' => 'Panorama Desa'
-        ];
-
-        foreach ($galeriItems as $item) {
-            $albumKey = $item->album ?: $item->kategori;
-
-            if (!isset($galeri[$albumKey])) {
-                $galeri[$albumKey] = [
-                    'album' => $albumNames[$item->kategori] ?? ucfirst($albumKey),
-                    'kategori' => $item->kategori,
-                    'deskripsi' => $albumDescriptions[$item->kategori] ?? 'Koleksi foto ' . ucfirst($albumKey),
-                    'foto' => []
+            foreach ($parent->children as $child) {
+                // skip child without gambar
+                if (!$child->gambar) continue;
+                $group['foto'][] = [
+                    'id' => $child->id,
+                    'judul' => $child->judul,
+                    'url' => asset($child->gambar),
+                    'tanggal' => $child->tanggal?->format('Y-m-d'),
+                    'deskripsi' => $child->deskripsi,
                 ];
             }
 
-            $galeri[$albumKey]['foto'][] = [
-                'id' => $item->id,
-                'judul' => $item->judul,
-                'url' => asset($item->gambar),
-                'tanggal' => $item->tanggal->format('Y-m-d'),
-                'deskripsi' => $item->deskripsi
-            ];
-        }
-
-        // Jika tidak ada data, tetap tampilkan struktur kosong untuk kategori yang ada
-        if (empty($galeri) && $kategoriFilter === 'semua') {
-            foreach ($albumNames as $key => $name) {
-                $galeri[$key] = [
-                    'album' => $name,
-                    'kategori' => $key,
-                    'deskripsi' => $albumDescriptions[$key],
-                    'foto' => []
-                ];
+            if (count($group['foto']) > 0) {
+                $galeri[] = $group;
             }
         }
 
         // Kategori yang tersedia
         $kategoriList = ['semua', 'kegiatan', 'pembangunan', 'event', 'panorama'];
 
-        return view('galeri-desa', compact('galeri', 'kategoriList'));
+        return view('galeri-desa', compact('galeri', 'kategoriList', 'kategori'));
+    }
+
+    public function show($id)
+    {
+        // Show a parent gallery and its children images
+        $parent = Galeri::where('is_parent', true)->with('children')->findOrFail($id);
+
+        $images = $parent->children->map(function($child) {
+            return [
+                'id' => $child->id,
+                'url' => asset($child->gambar),
+                'deskripsi' => $child->deskripsi,
+                'judul' => $child->judul,
+                'tanggal' => $child->tanggal?->format('Y-m-d'),
+            ];
+        });
+
+        return view('galeri-show', compact('parent', 'images'));
     }
 }

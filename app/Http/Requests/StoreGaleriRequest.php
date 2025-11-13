@@ -24,7 +24,8 @@ class StoreGaleriRequest extends FormRequest
         return [
             'judul' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'gambar' => 'nullable|array',
+            'gambar.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'kategori' => 'required|in:kegiatan,pembangunan,event,panorama',
             'album' => 'required|string|max:255',
             'tanggal' => 'required|date',
@@ -40,9 +41,10 @@ class StoreGaleriRequest extends FormRequest
         return [
             'judul.required' => 'Judul galeri wajib diisi.',
             'judul.max' => 'Judul galeri maksimal 255 karakter.',
-            'gambar.image' => 'File harus berupa gambar.',
-            'gambar.mimes' => 'Format gambar harus jpeg, png, jpg, atau gif.',
-            'gambar.max' => 'Ukuran gambar maksimal 2MB.',
+            'gambar.array' => 'Gambar harus berupa array file.',
+            'gambar.*.image' => 'Setiap file harus berupa gambar.',
+            'gambar.*.mimes' => 'Format gambar harus jpeg, png, jpg, atau gif.',
+            'gambar.*.max' => 'Ukuran gambar maksimal 2MB.',
             'kategori.required' => 'Kategori wajib dipilih.',
             'kategori.in' => 'Kategori tidak valid.',
             'album.required' => 'Album wajib diisi.',
