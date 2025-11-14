@@ -26,7 +26,8 @@
 
                             <!-- Deskripsi Galeri -->
                             <div class="md:col-span-2">
-                                <label for="deskripsi" class="block text-sm font-medium text-gray-700">Deskripsi</label>
+                                <label for="deskripsi" class="block text-sm font-medium text-gray-700">Deskripsi
+                                    Foto</label>
                                 <textarea name="deskripsi" id="deskripsi" rows="3"
                                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 @error('deskripsi') border-red-500 @enderror">{{ old('deskripsi', $galeri->deskripsi) }}</textarea>
                                 @error('deskripsi')
@@ -46,9 +47,14 @@
                                                 <img src="{{ asset($child->gambar) }}" alt="{{ $child->judul }}"
                                                     class="h-32 w-full object-cover rounded mb-2">
 
-                                                <label class="block text-xs font-medium text-gray-700">Deskripsi Gambar</label>
+                                                {{-- <label class="block text-xs font-medium text-gray-700">Deskripsi Gambar</label>
                                                 <textarea name="image_descriptions[{{ $child->id }}]" rows="2"
                                                     class="w-full border-gray-300 rounded-md">{{ old('image_descriptions.' . $child->id, $child->deskripsi) }}</textarea>
+                                                --}}
+
+                                                <label class="block text-xs font-medium text-gray-700 mt-2">Deskripsi Foto</label>
+                                                <textarea name="deskfoto_descriptions[{{ $child->id }}]" rows="2"
+                                                    class="w-full border-gray-300 rounded-md">{{ old('deskfoto_descriptions.' . $child->id, $child->deskfoto) }}</textarea>
 
                                                 <div class="mt-2 flex items-center">
                                                     <input type="checkbox" name="delete_images[]" value="{{ $child->id }}"
@@ -67,6 +73,9 @@
                                         <input type="file" name="gambar[]" accept="image/*" multiple
                                             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                                     </div>
+                                    <label class="block text-sm font-medium text-gray-700 mt-3">Deskripsi Foto</label>
+                                    <textarea name="deskfoto_gambar[]" rows="2"
+                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
                                 </div>
 
                                 <button type="button" id="add-image"
@@ -143,20 +152,20 @@
             wrapper.className = "image-input mb-4 p-3 border rounded-md bg-gray-50";
 
             wrapper.innerHTML = `
-                    <label class="block text-sm font-medium text-gray-700">Gambar Baru</label>
-                    <input type="file" name="gambar[]" accept="image/*"
-                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        <label class="block text-sm font-medium text-gray-700">Gambar Baru</label>
+                        <input type="file" name="gambar[]" accept="image/*"
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
 
-                    <label class="block text-sm font-medium text-gray-700 mt-3">Deskripsi Gambar Baru</label>
-                    <textarea name="deskripsi_gambar[]" rows="2"
-                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                        placeholder="Tulis deskripsi untuk gambar ini..."></textarea>
+                        <label class="block text-sm font-medium text-gray-700 mt-3">Deskripsi Foto Baru</label>
+                        <textarea name="deskfoto_gambar[]" rows="2"
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                            placeholder="Tulis deskfoto untuk gambar ini..."></textarea>
 
-                    <button type="button"
-                        class="mt-3 bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-sm remove-image">
-                        Hapus
-                    </button>
-                `;
+                        <button type="button"
+                            class="mt-3 bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-sm remove-image">
+                            Hapus
+                        </button>
+                    `;
 
             container.appendChild(wrapper);
         });

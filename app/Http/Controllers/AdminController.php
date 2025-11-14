@@ -853,7 +853,11 @@ class AdminController extends Controller
         // Handle multiple gambar uploads
         if ($request->hasFile('gambar')) {
             $files = $request->file('gambar');
-            foreach ($files as $file) {
+            $deskripsiGambar = $request->input('deskripsi_gambar', []);
+
+            $deskfotoGambar = $request->input('deskfoto_gambar', []);
+
+            foreach ($files as $index => $file) {
                 if ($file && $file->isValid()) {
                     $filename = time() . '_' . uniqid() . '_' . $file->getClientOriginalName();
                     $file->move(public_path('images/galeri'), $filename);
@@ -862,6 +866,7 @@ class AdminController extends Controller
                     Galeri::create([
                         'judul' => $data['judul'], // Same title for all images in the set
                         'deskripsi' => $data['deskripsi'], // Same description
+                        'deskfoto' => $deskfotoGambar[$index] ?? null, // Deskfoto per gambar
                         'gambar' => 'images/galeri/' . $filename,
                         'kategori' => $data['kategori'],
                         'album' => $data['album'],
@@ -922,6 +927,17 @@ class AdminController extends Controller
             }
         }
 
+        // Update deskfoto for existing child images
+        if ($request->filled('deskfoto_descriptions') && is_array($request->deskfoto_descriptions)) {
+            foreach ($request->deskfoto_descriptions as $childId => $deskfoto) {
+                $child = Galeri::where('parent_id', $galeri->id)->where('id', $childId)->first();
+                if ($child) {
+                    $child->deskfoto = $deskfoto;
+                    $child->save();
+                }
+            }
+        }
+
         // Handle deletion of selected child images
         if ($request->filled('delete_images') && is_array($request->delete_images)) {
             foreach ($request->delete_images as $childId) {
@@ -940,14 +956,18 @@ class AdminController extends Controller
         // Handle multiple new gambar uploads
         if ($request->hasFile('gambar')) {
             $files = $request->file('gambar');
-            foreach ($files as $file) {
+            $deskripsiGambar = $request->input('deskripsi_gambar', []);
+            $deskfotoGambar = $request->input('deskfoto_gambar', []);
+
+            foreach ($files as $index => $file) {
                 if ($file && $file->isValid()) {
                     $filename = time() . '_' . uniqid() . '_' . $file->getClientOriginalName();
                     $file->move(public_path('images/galeri'), $filename);
 
                     Galeri::create([
                         'judul' => $galeri->judul,
-                        'deskripsi' => $galeri->deskripsi, // auto-fill with parent description
+                        'deskripsi' => $deskripsiGambar[$index] ?? $galeri->deskripsi, // use provided or parent description
+                        'deskfoto' => $deskfotoGambar[$index] ?? null,
                         'gambar' => 'images/galeri/' . $filename,
                         'kategori' => $galeri->kategori,
                         'album' => $galeri->album,

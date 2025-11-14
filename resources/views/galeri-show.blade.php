@@ -26,6 +26,9 @@
                         @if($img['deskripsi'])
                             <p class="text-sm text-gray-700">{{ $img['deskripsi'] }}</p>
                         @endif
+                        @if($img['deskfoto'])
+                            <p class="text-sm text-gray-600 mt-1">{{ $img['deskfoto'] }}</p>
+                        @endif
                         <p class="text-xs text-gray-500 mt-2">{{ $img['tanggal'] }}</p>
                     </div>
                 </div>

@@ -23,7 +23,7 @@
 
                             <!-- Deskripsi -->
                             <div class="md:col-span-2">
-                                <label for="deskripsi" class="block text-sm font-medium text-gray-700">Deskripsi</label>
+                                <label for="deskripsi" class="block text-sm font-medium text-gray-700">Deskripsi Galeri</label>
                                 <textarea name="deskripsi" id="deskripsi" rows="3"
                                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 @error('deskripsi') border-red-500 @enderror">{{ old('deskripsi') }}</textarea>
                                 @error('deskripsi')
@@ -39,6 +39,9 @@
                                         <input type="file" name="gambar[]" accept="image/*" multiple
                                             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 @error('gambar') border-red-500 @enderror">
                                     </div>
+                                    <label class="block text-sm font-medium text-gray-700 mt-3">Deskripsi Foto</label>
+                                    <textarea name="deskfoto_gambar[]" rows="2"
+                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
                                 </div>
                                 <button type="button" id="add-image"
                                     class="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-3 rounded text-sm">
@@ -125,22 +128,23 @@
             wrapper.className = "image-input mb-4 p-3 border rounded-md bg-gray-50";
 
             wrapper.innerHTML = `
-                <!-- Input Gambar -->
-                <label class="block text-sm font-medium text-gray-700">Gambar</label>
-                <input type="file" name="gambar[]" accept="image/*"
-                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <!-- Input Gambar -->
+                    <label class="block text-sm font-medium text-gray-700">Gambar</label>
+                    <input type="file" name="gambar[]" accept="image/*"
+                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
 
-                <!-- Deskripsi Gambar -->
-                <label class="block text-sm font-medium text-gray-700 mt-3">Deskripsi Gambar</label>
-                <textarea name="deskripsi_gambar[]" rows="2"
-                          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                    
 
-                <!-- Tombol Hapus -->
-                <button type="button"
-                        class="mt-3 bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-sm remove-image">
-                    Hapus
-                </button>
-            `;
+                    <label class="block text-sm font-medium text-gray-700 mt-3">Deskripsi Foto</label>
+                    <textarea name="deskfoto_gambar[]" rows="2"
+                              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+
+                    <!-- Tombol Hapus -->
+                    <button type="button"
+                            class="mt-3 bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-sm remove-image">
+                        Hapus
+                    </button>
+                `;
 
             container.appendChild(wrapper);
         });

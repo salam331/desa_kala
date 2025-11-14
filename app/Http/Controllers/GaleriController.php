@@ -39,6 +39,7 @@ class GaleriController extends Controller
                     'url' => asset($child->gambar),
                     'tanggal' => $child->tanggal?->format('Y-m-d'),
                     'deskripsi' => $child->deskripsi,
+                    'deskfoto' => $child->deskfoto,
                 ];
             }
 
@@ -63,6 +64,7 @@ class GaleriController extends Controller
                 'id' => $child->id,
                 'url' => asset($child->gambar),
                 'deskripsi' => $child->deskripsi,
+                'deskfoto' => $child->deskfoto,
                 'judul' => $child->judul,
                 'tanggal' => $child->tanggal?->format('Y-m-d'),
             ];
