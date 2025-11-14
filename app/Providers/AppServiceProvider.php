@@ -23,7 +23,11 @@ class AppServiceProvider extends ServiceProvider
     {
         // Share welcome elements to all views
         View::composer('*', function ($view) {
-            $welcomeElements = WelcomeElement::all()->groupBy('element_type');
+            try {
+                $welcomeElements = WelcomeElement::all()->groupBy('element_type');
+            } catch (\Exception $e) {
+                $welcomeElements = collect();
+            }
             $view->with('welcomeElements', $welcomeElements);
         });
     }

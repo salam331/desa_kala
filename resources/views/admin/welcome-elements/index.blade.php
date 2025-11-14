@@ -40,7 +40,8 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-6">
                 <div class="p-4 border-b border-gray-200 dark:border-gray-700">
                     <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-3">Filter Berdasarkan Bagian</h3>
-                    <div class="flex flex-wrap gap-2">
+                    <!-- Desktop Version: Button Filter -->
+                    <div class="hidden md:flex flex-wrap gap-2">
                         <a href="{{ route('admin.welcome-elements.index') }}"
                            class="px-3 py-1 rounded-full text-sm {{ !request('section') ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800' }} hover:bg-blue-200 transition">
                             Semua
@@ -51,6 +52,20 @@
                                 {{ ucfirst($section) }}
                             </a>
                         @endforeach
+                    </div>
+                    <!-- Mobile Version: Select Dropdown -->
+                    <div class="block md:hidden">
+                        <select onchange="window.location.href = this.value"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-gray-200">
+                            <option value="{{ route('admin.welcome-elements.index') }}" {{ !request('section') ? 'selected' : '' }}>
+                                Semua
+                            </option>
+                            @foreach(['navbar', 'hero', 'profile', 'location', 'agriculture', 'culture', 'footer'] as $section)
+                                <option value="{{ route('admin.welcome-elements.index', ['section' => $section]) }}" {{ request('section') == $section ? 'selected' : '' }}>
+                                    {{ ucfirst($section) }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
             </div>
@@ -75,7 +90,8 @@
                         </div>
                     @endif
 
-                    <div class="overflow-x-auto">
+                    <!-- Desktop Table View -->
+                    <div class="hidden md:block overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                             <thead class="bg-gray-50 dark:bg-gray-700">
                                 <tr>
@@ -169,6 +185,78 @@
                                 @endforeach
                             </tbody>
                         </table>
+                    </div>
+
+                    <!-- Mobile Card View -->
+                    <div class="block md:hidden space-y-4">
+                        @foreach($elements as $element)
+                            <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                                <div class="flex items-start justify-between mb-3">
+                                    <div class="flex-1">
+                                        <div class="flex items-center space-x-2 mb-2">
+                                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
+                                                @if($element->element_type == 'navbar') bg-purple-100 text-purple-800
+                                                @elseif($element->element_type == 'hero') bg-blue-100 text-blue-800
+                                                @elseif($element->element_type == 'profile') bg-green-100 text-green-800
+                                                @elseif($element->element_type == 'location') bg-yellow-100 text-yellow-800
+                                                @elseif($element->element_type == 'agriculture') bg-orange-100 text-orange-800
+                                                @elseif($element->element_type == 'culture') bg-pink-100 text-pink-800
+                                                @elseif($element->element_type == 'footer') bg-gray-100 text-gray-800
+                                                @else bg-gray-100 text-gray-800
+                                                @endif">
+                                                {{ ucfirst($element->element_type) }}
+                                            </span>
+                                            @if($element->is_active)
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                    </svg>
+                                                    Aktif
+                                                </span>
+                                            @else
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                    </svg>
+                                                    Nonaktif
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <h3 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">
+                                            {{ $element->getElementKeyLabel() }}
+                                        </h3>
+                                        <p class="text-sm text-gray-500 dark:text-gray-300">
+                                            @if(strlen($element->content) > 100)
+                                                <span title="{{ $element->content }}">{{ substr($element->content, 0, 100) }}...</span>
+                                            @else
+                                                {{ $element->content }}
+                                            @endif
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="flex space-x-2 mt-4">
+                                    <a href="{{ route('admin.welcome-elements.edit', $element) }}"
+                                        class="flex-1 inline-flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium text-indigo-700 bg-indigo-100 hover:bg-indigo-200 transition">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                        </svg>
+                                        Edit
+                                    </a>
+                                    <form method="POST" action="{{ route('admin.welcome-elements.destroy', $element) }}"
+                                          class="flex-1"
+                                          onsubmit="return confirm('Apakah Anda yakin ingin menghapus konten ini? Konten yang dihapus tidak akan muncul di halaman website.')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="w-full inline-flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium text-red-700 bg-red-100 hover:bg-red-200 transition">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                            </svg>
+                                            Hapus
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
 
                     @if($elements->isEmpty())

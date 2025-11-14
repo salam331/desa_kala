@@ -101,7 +101,8 @@ class AdminController extends Controller
     public function manageAdmins()
     {
         $admins = User::paginate(10);
-        return view('admin.manage-admins', compact('admins'));
+        $totalAdmins = User::count();
+        return view('admin.manage-admins', compact('admins', 'totalAdmins'));
     }
 
     public function createAdmin(Request $request)
@@ -150,8 +151,22 @@ class AdminController extends Controller
     // Pengaduan Management
     public function pengaduan()
     {
-        $pengaduan = Pengaduan::orderBy('created_at', 'desc')->paginate(10);
-        return view('admin.pengaduan', compact('pengaduan'));
+        $query = Pengaduan::orderBy('created_at', 'desc');
+
+        // Filter berdasarkan status jika ada
+        if (request('status') && request('status') !== 'all') {
+            $query->where('status', request('status'));
+        }
+
+        $pengaduan = $query->paginate(10)->appends(request()->query());
+
+        // Hitung total untuk setiap status
+        $totalPengaduan = Pengaduan::count();
+        $pendingCount = Pengaduan::where('status', 'pending')->count();
+        $diprosesCount = Pengaduan::where('status', 'diproses')->count();
+        $selesaiCount = Pengaduan::where('status', 'selesai')->count();
+
+        return view('admin.pengaduan', compact('pengaduan', 'totalPengaduan', 'pendingCount', 'diprosesCount', 'selesaiCount'));
     }
 
     public function updatePengaduanStatus(Request $request, $id)
@@ -225,7 +240,7 @@ class AdminController extends Controller
     // Welcome Elements Management
     public function index()
     {
-        $query = WelcomeElement::orderBy('element_type')->orderBy('sort_order');
+        $query = WelcomeElement::orderBy('element_type')->orderBy('sort_order')->orderBy('id');
 
         // Filter berdasarkan section jika ada
         if (request('section')) {

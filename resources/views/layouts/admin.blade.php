@@ -17,13 +17,17 @@
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Alpine.js -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
-<body class="font-sans antialiased">
+<body class="font-sans antialiased" x-data="{ open: false }">
     <div class="min-h-screen bg-gray-100 flex">
         <!-- Sidebar Admin -->
         <div
-            class="bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-gray-200 w-64 min-h-screen flex flex-col shadow-xl">
+            class="bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-gray-200 w-64 min-h-screen flex flex-col shadow-xl fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out lg:translate-x-0"
+            :class="{ '-translate-x-full': !open, 'translate-x-0': open }">
             <!-- Logo & Title -->
             <div class="flex flex-col items-center justify-center py-6 border-b border-gray-700">
                 <div class="bg-indigo-600 w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg mb-3">
@@ -139,10 +143,20 @@
         <script src="https://kit.fontawesome.com/a2e0f1f1f9.js" crossorigin="anonymous"></script>
 
 
+        <!-- Mobile Overlay -->
+        <div x-show="open" @click="open = false"
+            class="fixed inset-0 bg-black bg-opacity-50 z-45 lg:hidden"
+            x-transition:enter="transition-opacity ease-linear duration-300"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="transition-opacity ease-linear duration-300"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"></div>
+
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col">
+        <div class="flex-1 flex flex-col lg:ml-64">
             <!-- Top Bar -->
-            <header class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg mb-4">
+            <header class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg mb-4 fixed top-0 left-0 right-0 lg:left-64 z-30">
                 <div class="flex flex-col lg:flex-row items-center justify-between px-6 py-4">
                     <!-- Kiri: Judul & Salam -->
                     <div class="flex items-center mb-4 lg:mb-0">
@@ -211,7 +225,7 @@
 
 
             <!-- Page Content -->
-            <main class="flex-1 p-6">
+            <main class="flex-1 p-0 sm:p-6 mt-20 pt-6">
                 @yield('content')
             </main>
         </div>
