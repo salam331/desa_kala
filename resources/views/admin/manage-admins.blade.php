@@ -90,7 +90,7 @@
                     </div>
                     <button onclick="document.getElementById('create-admin-modal').classList.remove('hidden')"
                         class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                        Tambah Admin Baru
+                        <i class="fas fa-user-plus mr-2"></i>Tambah Admin Baru
                     </button>
 
                     <!-- Admin List - Mobile Cards -->

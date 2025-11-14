@@ -5,16 +5,25 @@
 @section('content')
 <div class="py-12">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center mb-6">
+        <!-- Desktop Header -->
+        <div class="hidden md:flex justify-between items-center mb-6">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 {{ __('Kelola Konten Halaman Welcome') }}
             </h2>
             <a href="{{ route('admin.welcome-elements.create') }}"
                 class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition">
-                <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                </svg>
-                Tambah Konten Baru
+                <i class="fas fa-plus mr-2"></i>Tambah Konten Baru
+            </a>
+        </div>
+
+        <!-- Mobile Header -->
+        <div class="block md:hidden mb-6">
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight mb-4">
+                {{ __('Kelola Konten Halaman Welcome') }}
+            </h2>
+            <a href="{{ route('admin.welcome-elements.create') }}"
+                class="w-full bg-blue-600 text-white px-4 py-3 rounded-lg shadow-md hover:bg-blue-700 transition flex items-center justify-center">
+                <i class="fas fa-plus mr-2"></i>Tambah Konten Baru
             </a>
         </div>
             <!-- Info Panel -->

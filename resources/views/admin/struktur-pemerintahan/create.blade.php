@@ -3,86 +3,86 @@
 @section('title', 'Tambah Struktur Pemerintahan')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Tambah Anggota Struktur Pemerintahan</h3>
-                </div>
-                <div class="card-body">
-                    <form action="{{ route('admin.struktur-pemerintahan.store') }}" method="POST" enctype="multipart/form-data">
+    <div class="py-12">
+        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
+
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                    {{ __('Tambah Anggota Struktur Pemerintahan') }}
+                </h2>
+            </div>
+
+            <!-- Card -->
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 bg-white border-b border-gray-200">
+
+                    <form action="{{ route('admin.struktur-pemerintahan.store') }}" method="POST"
+                        enctype="multipart/form-data">
                         @csrf
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="nama">Nama Lengkap</label>
-                                    <input type="text" name="nama" id="nama" class="form-control @error('nama') is-invalid @enderror" value="{{ old('nama') }}" required>
-                                    @error('nama')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="jabatan">Jabatan</label>
-                                    <input type="text" name="jabatan" id="jabatan" class="form-control @error('jabatan') is-invalid @enderror" value="{{ old('jabatan') }}" required>
-                                    @error('jabatan')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
+                        <!-- Nama Lengkap -->
+                        <div class="mb-4">
+                            <x-input-label for="nama" :value="__('Nama Lengkap')" />
+                            <x-text-input id="nama" class="block mt-1 w-full" type="text" name="nama" :value="old('nama')"
+                                required autofocus />
+                            <x-input-error :messages="$errors->get('nama')" class="mt-2" />
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="urutan">Urutan</label>
-                                    <input type="number" name="urutan" id="urutan" class="form-control @error('urutan') is-invalid @enderror" value="{{ old('urutan', 0) }}" min="0" required>
-                                    @error('urutan')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    <small class="form-text text-muted">Urutan tampilan (0 = teratas)</small>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="is_active">Status</label>
-                                    <select name="is_active" id="is_active" class="form-control @error('is_active') is-invalid @enderror">
-                                        <option value="1" {{ old('is_active', 1) == 1 ? 'selected' : '' }}>Aktif</option>
-                                        <option value="0" {{ old('is_active', 1) == 0 ? 'selected' : '' }}>Tidak Aktif</option>
-                                    </select>
-                                    @error('is_active')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
+                        <!-- Jabatan -->
+                        <div class="mb-4">
+                            <x-input-label for="jabatan" :value="__('Jabatan')" />
+                            <x-text-input id="jabatan" class="block mt-1 w-full" type="text" name="jabatan"
+                                :value="old('jabatan')" required />
+                            <x-input-error :messages="$errors->get('jabatan')" class="mt-2" />
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="foto">Foto</label>
-                                    <input type="file" name="foto" id="foto" class="form-control @error('foto') is-invalid @enderror" accept="image/*">
-                                    @error('foto')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    <small class="form-text text-muted">Format: JPG, PNG, GIF. Maksimal 2MB.</small>
-                                </div>
-                            </div>
+                        <!-- Urutan -->
+                        <div class="mb-4">
+                            <x-input-label for="urutan" :value="__('Urutan Tampilan')" />
+                            <x-text-input id="urutan" class="block mt-1 w-full" type="number" name="urutan"
+                                :value="old('urutan', 0)" min="0" required />
+                            <small class="text-gray-500 text-sm">Urutan tampilan (0 = teratas)</small>
+                            <x-input-error :messages="$errors->get('urutan')" class="mt-2" />
                         </div>
 
-                        <div class="row">
-                            <div class="col-12">
-                                <button type="submit" class="btn btn-primary">Simpan</button>
-                                <a href="{{ route('admin.struktur-pemerintahan.index') }}" class="btn btn-secondary">Kembali</a>
-                            </div>
+                        <!-- Status -->
+                        <div class="mb-4">
+                            <x-input-label for="is_active" :value="__('Status')" />
+                            <select id="is_active" name="is_active"
+                                class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                                <option value="1" {{ old('is_active', 1) == 1 ? 'selected' : '' }}>Aktif</option>
+                                <option value="0" {{ old('is_active', 1) == 0 ? 'selected' : '' }}>Tidak Aktif</option>
+                            </select>
+                            <x-input-error :messages="$errors->get('is_active')" class="mt-2" />
                         </div>
+
+                        <!-- Foto -->
+                        <div class="mb-4">
+                            <x-input-label for="foto" :value="__('Foto (Opsional)')" />
+                            <input id="foto" type="file" name="foto" accept="image/*"
+                                class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" />
+                            <small class="text-gray-500 text-sm">Format: JPG, PNG, GIF. Maksimal 2MB.</small>
+                            <x-input-error :messages="$errors->get('foto')" class="mt-2" />
+                        </div>
+
+                        <!-- Tombol aksi -->
+                        <div
+                            class="flex flex-col sm:flex-row items-center justify-end mt-6 space-y-2 sm:space-y-0 sm:space-x-4">
+                            <a href="{{ route('admin.struktur-pemerintahan.index') }}"
+                                class="w-full sm:w-auto text-center px-4 py-2 text-gray-600 hover:text-gray-900 border border-gray-300 rounded-md">
+                                Batal
+                            </a>
+                            <x-primary-button class="w-full sm:w-auto">
+                                {{ __('Simpan Anggota') }}
+                            </x-primary-button>
+                        </div>
+
                     </form>
+
                 </div>
             </div>
+
         </div>
     </div>
-</div>
 @endsection

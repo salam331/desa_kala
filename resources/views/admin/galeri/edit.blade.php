@@ -1,12 +1,34 @@
 @extends('layouts.admin')
 
-@section('title', 'Manajemen Galeri')
+@section('title', 'Edit Galeri Desa')
 
 @section('content')
-    <div class="py-12">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 bg-white border-b border-gray-200">
+<div class="py-12">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <!-- Desktop Header -->
+        <div class="hidden md:flex justify-between items-center mb-6">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ __('Edit Galeri Desa') }}
+            </h2>
+            <a href="{{ route('admin.galeri.index') }}"
+                class="bg-gray-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-700 transition">
+                <i class="fas fa-arrow-left mr-2"></i>Kembali
+            </a>
+        </div>
+
+        <!-- Mobile Header -->
+        <div class="block md:hidden mb-6">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight mb-4">
+                {{ __('Edit Galeri Desa') }}
+            </h2>
+            <a href="{{ route('admin.galeri.index') }}"
+                class="w-full bg-gray-600 text-white px-4 py-3 rounded-lg shadow-md hover:bg-gray-700 transition flex items-center justify-center">
+                <i class="fas fa-arrow-left mr-2"></i>Kembali
+            </a>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="p-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
                     <form method="POST" action="{{ route('admin.galeri.update', $galeri->id) }}"
                         enctype="multipart/form-data">
                         @csrf
@@ -129,12 +151,11 @@
                         <div class="mt-6 flex items-center justify-end">
                             <a href="{{ route('admin.galeri.index') }}"
                                 class="mr-4 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
-                                Batal
+                                <i class="fas fa-arrow-left mr-2"></i>Batal
                             </a>
-
                             <button type="submit"
                                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                Update
+                                <i class="fas fa-save mr-2"></i>Update
                             </button>
                         </div>
                     </form>

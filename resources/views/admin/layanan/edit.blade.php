@@ -3,12 +3,26 @@
 @section('title', 'Edit Layanan')
 
 @section('content')
-<div class="container mx-auto px-4 py-8">
-    <div class="max-w-4xl mx-auto">
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-3xl font-bold text-gray-800">Edit Layanan Publik</h1>
+<div class="py-12">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <!-- Desktop Header -->
+        <div class="hidden md:flex justify-between items-center mb-6">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ __('Edit Layanan Publik') }}
+            </h2>
             <a href="{{ route('admin.layanan.index') }}"
-               class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors">
+                class="bg-gray-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-700 transition">
+                <i class="fas fa-arrow-left mr-2"></i>Kembali
+            </a>
+        </div>
+
+        <!-- Mobile Header -->
+        <div class="block md:hidden mb-6">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight mb-4">
+                {{ __('Edit Layanan Publik') }}
+            </h2>
+            <a href="{{ route('admin.layanan.index') }}"
+                class="w-full bg-gray-600 text-white px-4 py-3 rounded-lg shadow-md hover:bg-gray-700 transition flex items-center justify-center">
                 <i class="fas fa-arrow-left mr-2"></i>Kembali
             </a>
         </div>

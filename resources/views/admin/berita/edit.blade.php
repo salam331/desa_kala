@@ -75,9 +75,9 @@
                             @endif
                         </div>
 
-                        <div class="flex items-center justify-end mt-6">
-                            <a href="{{ route('admin.berita.index') }}" class="mr-4 text-gray-600 hover:text-gray-900">Batal</a>
-                            <x-primary-button>
+                        <div class="flex flex-col sm:flex-row items-center justify-end mt-6 space-y-2 sm:space-y-0 sm:space-x-4">
+                            <a href="{{ route('admin.berita.index') }}" class="w-full sm:w-auto text-center px-4 py-2 text-gray-600 hover:text-gray-900 border border-gray-300 rounded-md">Batal</a>
+                            <x-primary-button class="w-full sm:w-auto">
                                 {{ __('Update Berita') }}
                             </x-primary-button>
                         </div>
